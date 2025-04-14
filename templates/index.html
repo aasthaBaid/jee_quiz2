@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JEE Practice Quiz</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #4361ee;
+        --primary-light: #4895ef;
+        --secondary: #3f37c9;
+        --success: #4cc9f0;
+        --danger: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+        color: var(--dark);
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: linear-gradient(90deg, var(--primary), var(--success));
+      }
+
+      h1 {
+        color: var(--primary);
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: var(--gray);
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+      }
+
+      .alert-success {
+        background-color: rgba(76, 201, 240, 0.1);
+        border-left: 4px solid var(--success);
+        color: var(--dark);
+      }
+
+      .alert-error {
+        background-color: rgba(247, 37, 133, 0.1);
+        border-left: 4px solid var(--danger);
+        color: var(--dark);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--dark);
+      }
+
+      select {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .chapters-container {
+        background: var(--light);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      .chapter-option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+      }
+
+      .chapter-option:last-child {
+        margin-bottom: 0;
+      }
+
+      .chapter-option input {
+        margin-right: 0.8rem;
+      }
+
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .features {
+        margin-top: 3rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .feature {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .feature:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-icon {
+        font-size: 2rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      .feature-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .feature-desc {
+        color: var(--gray);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .container {
+          padding: 1.5rem;
+        }
+
+        .features {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>JEE Advanced Practice Quiz</h1>
+      <p class="subtitle">
+        Test your knowledge with expertly crafted questions
+      </p>
+
+      {% if message %}
+      <div
+        class="alert {% if 'failed' in message %}alert-error{% else %}alert-success{% endif %}"
+      >
+        {{ message }}
+      </div>
+      {% endif %} {% if error_message %}
+      <div class="alert alert-error">{{ error_message }}</div>
+      {% endif %}
+
+      <form method="POST" action="/start_quiz">
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <select id="subject" name="subject" required>
+            <option value="">Select a subject</option>
+            {% for subject in subjects %}
+            <option value="{{ subject }}">{{ subject }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="chapters-container" id="chapters-container">
+          <label>Chapters</label>
+          <p>Please select a subject first to see available chapters</p>
+        </div>
+
+        <button type="submit" class="btn">Start Quiz</button>
+      </form>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">📚</div>
+          <h3 class="feature-title">Comprehensive Coverage</h3>
+          <p class="feature-desc">
+            All topics from Physics, Chemistry, and Mathematics
+          </p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📈</div>
+          <h3 class="feature-title">Performance Analysis</h3>
+          <p class="feature-desc">Detailed results with accuracy metrics</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🧠</div>
+          <h3 class="feature-title">Smart Learning</h3>
+          <p class="feature-desc">ML-powered question recommendations</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("subject")
+        .addEventListener("change", function () {
+          const subject = this.value;
+          if (!subject) {
+            document.getElementById("chapters-container").innerHTML = `
+                    <label>Chapters</label>
+                    <p>Please select a subject first to see available chapters</p>
+                `;
+            return;
+          }
+
+          // Show loading state
+          document.getElementById("chapters-container").innerHTML = `
+                <label>Chapters</label>
+                <p>Loading chapters...</p>
+            `;
+
+          fetch("/get_chapters", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ subject: subject }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              const container = document.getElementById("chapters-container");
+              container.innerHTML = "<label>Chapters</label>";
+
+              data.chapters.forEach((chapter) => {
+                const div = document.createElement("div");
+                div.className = "chapter-option";
+                div.innerHTML = `
+                        <input type="checkbox" id="chapter_${chapter}" name="chapters" value="${chapter}">
+                        <label for="chapter_${chapter}">${chapter}</label>
+                    `;
+                container.appendChild(div);
+              });
+
+              // Add random option
+              const randomDiv = document.createElement("div");
+              randomDiv.className = "chapter-option";
+              randomDiv.innerHTML = `
+                    <input type="checkbox" id="chapter_random" name="chapters" value="random">
+                    <label for="chapter_random">Random Selection</label>
+                `;
+              container.appendChild(randomDiv);
+            })
+            .catch((error) => {
+              document.getElementById("chapters-container").innerHTML = `
+                    <label>Chapters</label>
+                    <p>Error loading chapters. Please try again.</p>
+                `;
+              console.error("Error:", error);
+            });
+        });
+    </script>
+  </body>
+</html>
