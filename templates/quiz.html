@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JEE Practice Quiz</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #4361ee;
+        --primary-light: #4895ef;
+        --secondary: #3f37c9;
+        --success: #4cc9f0;
+        --danger: #f72585;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+        color: var(--dark);
+      }
+
+      .quiz-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .quiz-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary), var(--success));
+      }
+
+      h1 {
+        color: var(--primary);
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+
+      .question {
+        background: white;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+      }
+
+      .question-number {
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      .question-text {
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        font-size: 1rem;
+      }
+
+      .options {
+        margin-left: 0.5rem;
+      }
+
+      .option {
+        display: flex;
+        align-items: center;
+        margin: 0.8rem 0;
+        padding: 1rem;
+        border-radius: 8px;
+        transition: all 0.2s;
+        background: var(--light);
+        border: 2px solid transparent;
+      }
+
+      .option:hover {
+        border-color: var(--primary-light);
+        transform: translateX(5px);
+      }
+
+      input[type="radio"] {
+        margin-right: 1rem;
+        width: 1.2rem;
+        height: 1.2rem;
+        cursor: pointer;
+        accent-color: var(--primary);
+      }
+
+      label {
+        cursor: pointer;
+        flex: 1;
+        font-size: 0.95rem;
+      }
+
+      .submit-btn {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 1.5rem;
+      }
+
+      .submit-btn:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+      }
+
+      .math-display {
+        overflow-x: auto;
+        padding: 0.5rem 0;
+        font-size: 1rem;
+      }
+
+      .progress-container {
+        width: 100%;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: var(--primary);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .quiz-container {
+          padding: 1.5rem;
+        }
+
+        .option {
+          padding: 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container">
+      <h1>JEE Practice Quiz</h1>
+
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <form id="quizForm" method="POST" action="/evaluate_quiz">
+        {% for question in questions %}
+        <div class="question">
+          <div class="question-number">Question {{ loop.index }}</div>
+          <div class="question-text math-display">
+            {{ question.question|safe }}
+          </div>
+
+          <div class="options">
+            {% for option in question.options %}
+            <div class="option">
+              <input
+                type="radio"
+                id="question_{{ question.id }}_{{ loop.index0 }}"
+                name="question_{{ question.id }}"
+                value="{{ option.identifier }}"
+              />
+              <label
+                for="question_{{ question.id }}_{{ loop.index0 }}"
+                class="math-display"
+              >
+                <strong>{{ option.identifier }}.</strong> {{ option.content|safe
+                }}
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+
+        <input
+          type="hidden"
+          name="questions_data"
+          value="{{ questions_json }}"
+        />
+        <button type="submit" class="submit-btn">Submit Quiz</button>
+      </form>
+    </div>
+
+    <script>
+      // Progress bar update logic
+      function updateProgress() {
+        const questions = document.querySelectorAll(".question");
+        const answered = Array.from(questions).filter((q) =>
+          q.querySelector('input[type="radio"]:checked')
+        ).length;
+
+        const progress = (answered / questions.length) * 100;
+        document.getElementById("progressBar").style.width = `${progress}%`;
+      }
+
+      // Initialize progress bar
+      document.addEventListener("DOMContentLoaded", () => {
+        updateProgress();
+
+        // Add event listeners to all radio buttons
+        document.querySelectorAll('input[type="radio"]').forEach((input) => {
+          input.addEventListener("change", updateProgress);
+        });
+
+        // Initialize MathJax
+        if (typeof MathJax !== "undefined") {
+          MathJax.typesetPromise();
+        }
+      });
+
+      // Handle form submission
+      document.getElementById("quizForm").addEventListener("submit", (e) => {
+        const unanswered = document.querySelectorAll(
+          ".question:not(:has(input:checked))"
+        );
+        if (
+          unanswered.length > 0 &&
+          !confirm(
+            `You have ${unanswered.length} unanswered questions. Submit anyway?`
+          )
+        ) {
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>
